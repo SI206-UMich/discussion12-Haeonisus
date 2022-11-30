@@ -80,7 +80,12 @@ def visualization_salary_data(cur, conn):
     salary_list = []
     job_list = []
     for item in job_data:
-        pass
+        salary_list.append(item[1])
+        job_list.append(item[0])
+        salary_list.append(item[2])
+        job_list.append(item[0])
+
+    plt.scatter(job_list, salary_list, marker='x', color='red')
 
     plt.xticks(rotation = 45) # xticks: x-axis
     plt.tight_layout()

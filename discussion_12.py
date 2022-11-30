@@ -38,12 +38,18 @@ def add_employee(filename, cur, conn):
         salary = int(item['salary'])
         cur.execute("INSERT OR IGNORE INTO employees (employee_id, first_name, last_name, hire_date, job_id, salaray) VALUES (?,?,?,?,?,?)",
         (employee_id, first_name, last_name, hire_date, job_id, salary))
-    conn.commit
+    conn.commit()
 
 
 # TASK 2: GET JOB AND HIRE_DATE INFORMATION
 def job_and_hire_date(cur, conn):
-    pass
+    cur.execute('SELECT employees.hire_date, Jobs.job_title FROM employees JOIN Jobs ON employees.job_id = Jobs.job_id')
+    job_hire_date = cur.fetchall()
+    #print(job_hire_date)
+    conn.commit()
+
+    sorted_job_hire_date = sorted(job_hire_date, key = lambda x:x[0])
+    return sorted_job_hire_date[0][1]
 
 # TASK 3: IDENTIFY PROBLEMATIC SALARY DATA
 # Apply JOIN clause to match individual employees
@@ -66,14 +72,14 @@ class TestDiscussion12(unittest.TestCase):
         count = len(self.cur.fetchall())
         self.assertEqual(count, 13)
 
-    '''def test_job_and_hire_date(self):
+    def test_job_and_hire_date(self):
         self.assertEqual('President', job_and_hire_date(self.cur, self.conn))
 
     def test_problematic_salary(self):
         sal_list = problematic_salary(self.cur, self.conn)
         self.assertIsInstance(sal_list, list)
         self.assertEqual(sal_list[0], ('Valli', 'Pataballa'))
-        self.assertEqual(len(sal_list), 4)'''
+        self.assertEqual(len(sal_list), 4)
 
 
 def main():
@@ -83,10 +89,10 @@ def main():
 
     add_employee("employee.json",cur, conn)
 
-    '''job_and_hire_date(cur, conn)
+    job_and_hire_date(cur, conn)
 
     wrong_salary = (problematic_salary(cur, conn))
-    print(wrong_salary)'''
+    print(wrong_salary)
 
 if __name__ == "__main__":
     main()
